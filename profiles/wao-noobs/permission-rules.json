@@ -1,0 +1,20 @@
+[
+  { "key": "alliance-everyone", "scope": { "type": "category", "key": "alliance-hq" }, "target": { "type": "everyone" }, "allow": [], "deny": ["ViewChannel"] },
+  { "key": "alliance-administrator", "scope": { "type": "category", "key": "alliance-hq" }, "target": { "type": "role", "roleKey": "administrator" }, "allow": ["ViewChannel"], "deny": [] },
+  { "key": "alliance-moderator", "scope": { "type": "category", "key": "alliance-hq" }, "target": { "type": "role", "roleKey": "moderator" }, "allow": ["ViewChannel"], "deny": [] },
+  { "key": "alliance-leader", "scope": { "type": "category", "key": "alliance-hq" }, "target": { "type": "role", "roleKey": "leader" }, "allow": ["ViewChannel"], "deny": [] },
+  { "key": "alliance-deputy", "scope": { "type": "category", "key": "alliance-hq" }, "target": { "type": "role", "roleKey": "deputy" }, "allow": ["ViewChannel"], "deny": [] },
+  { "key": "alliance-officer", "scope": { "type": "category", "key": "alliance-hq" }, "target": { "type": "role", "roleKey": "officer" }, "allow": ["ViewChannel"], "deny": [] },
+
+  { "key": "staff-everyone", "scope": { "type": "category", "key": "staff" }, "target": { "type": "everyone" }, "allow": [], "deny": ["ViewChannel"] },
+  { "key": "staff-administrator", "scope": { "type": "category", "key": "staff" }, "target": { "type": "role", "roleKey": "administrator" }, "allow": ["ViewChannel"], "deny": [] },
+  { "key": "staff-moderator", "scope": { "type": "category", "key": "staff" }, "target": { "type": "role", "roleKey": "moderator" }, "allow": ["ViewChannel"], "deny": [] },
+  { "key": "staff-staff", "scope": { "type": "category", "key": "staff" }, "target": { "type": "role", "roleKey": "staff" }, "allow": ["ViewChannel"], "deny": [] },
+
+  { "key": "announcements-everyone", "scope": { "type": "channel", "key": "announcements" }, "target": { "type": "everyone" }, "allow": [], "deny": ["SendMessages"] },
+  { "key": "announcements-administrator", "scope": { "type": "channel", "key": "announcements" }, "target": { "type": "role", "roleKey": "administrator" }, "allow": ["SendMessages"], "deny": [] },
+  { "key": "announcements-moderator", "scope": { "type": "channel", "key": "announcements" }, "target": { "type": "role", "roleKey": "moderator" }, "allow": ["SendMessages"], "deny": [] },
+  { "key": "game-news-everyone", "scope": { "type": "channel", "key": "game-news" }, "target": { "type": "everyone" }, "allow": [], "deny": ["SendMessages"] },
+  { "key": "game-news-administrator", "scope": { "type": "channel", "key": "game-news" }, "target": { "type": "role", "roleKey": "administrator" }, "allow": ["SendMessages"], "deny": [] },
+  { "key": "game-news-moderator", "scope": { "type": "channel", "key": "game-news" }, "target": { "type": "role", "roleKey": "moderator" }, "allow": ["SendMessages"], "deny": [] }
+]

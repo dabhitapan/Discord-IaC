@@ -1,0 +1,42 @@
+[
+  { "key": "announcements", "name": "announcements", "type": "GuildNews", "categoryKey": "information" },
+  { "key": "server-guide", "name": "server-guide", "type": "GuildForum", "categoryKey": "information" },
+  { "key": "rules", "name": "rules", "type": "GuildText", "categoryKey": "information" },
+  { "key": "faq", "name": "faq", "type": "GuildForum", "categoryKey": "information" },
+  { "key": "introductions", "name": "introductions", "type": "GuildText", "categoryKey": "information" },
+
+  { "key": "general", "name": "general", "type": "GuildText", "categoryKey": "community" },
+  { "key": "help", "name": "help", "type": "GuildText", "categoryKey": "community" },
+  { "key": "off-topic", "name": "off-topic", "type": "GuildText", "categoryKey": "community" },
+  { "key": "memes", "name": "memes", "type": "GuildText", "categoryKey": "community" },
+  { "key": "screenshots", "name": "screenshots", "type": "GuildText", "categoryKey": "community" },
+  { "key": "media", "name": "media", "type": "GuildText", "categoryKey": "community" },
+
+  { "key": "game-news", "name": "game-news", "type": "GuildNews", "categoryKey": "war-and-order" },
+  { "key": "tips-and-guides", "name": "tips-and-guides", "type": "GuildForum", "categoryKey": "war-and-order" },
+  { "key": "questions", "name": "questions", "type": "GuildForum", "categoryKey": "war-and-order" },
+  { "key": "events", "name": "events", "type": "GuildText", "categoryKey": "war-and-order" },
+  { "key": "gift-codes", "name": "gift-codes", "type": "GuildText", "categoryKey": "war-and-order" },
+  { "key": "battle-reports", "name": "battle-reports", "type": "GuildText", "categoryKey": "war-and-order" },
+  { "key": "alliances", "name": "alliances", "type": "GuildText", "categoryKey": "war-and-order" },
+  { "key": "recruitment-war", "name": "recruitment", "type": "GuildText", "categoryKey": "war-and-order" },
+
+  { "key": "leadership-announcements", "name": "leadership-announcements", "type": "GuildText", "categoryKey": "alliance-hq", "permissionMode": "inherit" },
+  { "key": "leadership-chat", "name": "leadership-chat", "type": "GuildText", "categoryKey": "alliance-hq", "permissionMode": "inherit" },
+  { "key": "war-room", "name": "war-room", "type": "GuildText", "categoryKey": "alliance-hq", "permissionMode": "inherit" },
+  { "key": "diplomacy", "name": "diplomacy", "type": "GuildText", "categoryKey": "alliance-hq", "permissionMode": "inherit" },
+  { "key": "planning", "name": "planning", "type": "GuildText", "categoryKey": "alliance-hq", "permissionMode": "inherit" },
+  { "key": "recruitment-hq", "name": "recruitment", "type": "GuildText", "categoryKey": "alliance-hq", "permissionMode": "inherit" },
+
+  { "key": "voice-general", "name": "general", "type": "GuildVoice", "categoryKey": "voice" },
+  { "key": "voice-war-room", "name": "War Room", "type": "GuildVoice", "categoryKey": "voice" },
+  { "key": "voice-gaming", "name": "Gaming", "type": "GuildVoice", "categoryKey": "voice" },
+  { "key": "voice-music", "name": "Music", "type": "GuildVoice", "categoryKey": "voice" },
+
+  { "key": "reports", "name": "reports", "type": "GuildForum", "categoryKey": "staff", "permissionMode": "inherit" },
+  { "key": "staff-announcements", "name": "staff-announcements", "type": "GuildText", "categoryKey": "staff", "permissionMode": "inherit" },
+  { "key": "staff-chat", "name": "staff-chat", "type": "GuildText", "categoryKey": "staff", "permissionMode": "inherit" },
+  { "key": "bot-testing", "name": "bot-testing", "type": "GuildText", "categoryKey": "staff", "permissionMode": "inherit" },
+  { "key": "server-management", "name": "server-management", "type": "GuildText", "categoryKey": "staff", "permissionMode": "inherit" },
+  { "key": "todo", "name": "todo", "type": "GuildText", "categoryKey": "staff", "permissionMode": "inherit" }
+]

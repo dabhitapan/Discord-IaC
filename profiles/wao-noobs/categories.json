@@ -1,0 +1,8 @@
+[
+  { "key": "information", "name": "📢 INFORMATION" },
+  { "key": "community", "name": "💬 COMMUNITY" },
+  { "key": "war-and-order", "name": "⚔️ WAR & ORDER" },
+  { "key": "alliance-hq", "name": "🏰 ALLIANCE HQ" },
+  { "key": "voice", "name": "🎤 VOICE" },
+  { "key": "staff", "name": "🔒 STAFF" }
+]

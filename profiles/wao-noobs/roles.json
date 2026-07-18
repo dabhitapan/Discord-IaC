@@ -1,0 +1,89 @@
+[
+  {
+    "key": "administrator",
+    "name": "Administrator",
+    "permissions": ["Administrator"],
+    "deniedPermissions": []
+  },
+  {
+    "key": "moderator",
+    "name": "Moderator",
+    "permissions": [
+      "ViewChannel",
+      "SendMessages",
+      "SendMessagesInThreads",
+      "CreatePublicThreads",
+      "CreatePrivateThreads",
+      "AddReactions",
+      "EmbedLinks",
+      "AttachFiles",
+      "UseExternalEmojis",
+      "UseExternalStickers",
+      "CreateInstantInvite",
+      "ChangeNickname",
+      "ManageNicknames",
+      "KickMembers",
+      "BanMembers",
+      "ModerateMembers",
+      "ManageChannels",
+      "ViewAuditLog",
+      "Connect",
+      "Speak",
+      "MuteMembers",
+      "DeafenMembers",
+      "MoveMembers"
+    ],
+    "deniedPermissions": [
+      "Administrator",
+      "ManageRoles",
+      "ManageGuild",
+      "ManageWebhooks",
+      "MentionEveryone"
+    ]
+  },
+  {
+    "key": "staff",
+    "name": "Staff",
+    "permissions": [
+      "ViewChannel",
+      "SendMessages",
+      "SendMessagesInThreads",
+      "CreatePublicThreads",
+      "CreatePrivateThreads",
+      "AddReactions",
+      "EmbedLinks",
+      "AttachFiles",
+      "UseExternalEmojis",
+      "UseExternalStickers",
+      "CreateInstantInvite",
+      "ChangeNickname",
+      "Connect",
+      "Speak",
+      "Stream"
+    ],
+    "deniedPermissions": [
+      "Administrator",
+      "ManageRoles",
+      "ManageGuild",
+      "ManageWebhooks",
+      "MentionEveryone",
+      "ManageNicknames",
+      "KickMembers",
+      "BanMembers",
+      "ModerateMembers",
+      "ManageChannels",
+      "ViewAuditLog",
+      "MuteMembers",
+      "DeafenMembers",
+      "MoveMembers"
+    ]
+  },
+  { "key": "bots", "name": "Bots", "permissions": [], "deniedPermissions": [] },
+  { "key": "leader", "name": "Leader", "permissions": [], "deniedPermissions": [] },
+  { "key": "deputy", "name": "Deputy", "permissions": [], "deniedPermissions": [] },
+  { "key": "officer", "name": "Officer", "permissions": [], "deniedPermissions": [] },
+  { "key": "elite", "name": "Elite", "permissions": [], "deniedPermissions": [] },
+  { "key": "member", "name": "Member", "permissions": [], "deniedPermissions": [] },
+  { "key": "ally", "name": "Ally", "permissions": [], "deniedPermissions": [] },
+  { "key": "visitor", "name": "Visitor", "permissions": [], "deniedPermissions": [] }
+]

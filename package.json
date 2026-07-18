@@ -1,0 +1,47 @@
+{
+  "name": "discord-iac",
+  "version": "1.0.0",
+  "description": "An Infrastructure-as-Code toolkit for exporting, validating, auditing, planning, and safely managing Discord server configuration.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "export": "tsx src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit",
+    "validate:profile": "tsx src/config/profileValidator.ts profiles/wao-noobs",
+    "audit:snapshot": "tsx src/planner/snapshotAudit.ts exports",
+    "plan": "tsx src/planner/plan.ts profiles/wao-noobs exports",
+    "diff": "tsx src/planner/diff.ts profiles/wao-noobs exports",
+    "diff:json": "tsx src/planner/diff.ts profiles/wao-noobs exports --json plans/wao-noobs.plan.json",
+    "plan:write": "tsx src/planner/diff.ts profiles/wao-noobs exports --json plans/wao-noobs.plan.json",
+    "apply": "tsx src/apply/apply.ts --plan plans/wao-noobs.plan.json --profile profiles/wao-noobs",
+    "restore": "tsx src/restore/restore.ts",
+    "drift": "tsx src/engine/driftCli.ts --plan plans/wao-noobs.plan.json",
+    "verify": "tsx src/engine/verify.ts profiles/wao-noobs exports",
+    "cli": "tsx src/cli.ts",
+    "test": "tsx --test src/planner/diffEngine.test.ts src/engine/safety.test.ts"
+  },
+  "keywords": [
+    "discord",
+    "infrastructure-as-code",
+    "iac",
+    "discord-js",
+    "configuration",
+    "automation",
+    "permissions",
+    "typescript"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "discord.js": "^14.27.0",
+    "dotenv": "^17.4.2"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "tsx": "^4.23.1",
+    "typescript": "^7.0.2"
+  }
+}

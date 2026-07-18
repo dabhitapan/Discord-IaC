@@ -1,0 +1,10 @@
+[
+  {
+    "id": "fixture-channel",
+    "name": "fixture-channel",
+    "type": "GuildText",
+    "parentId": "fixture-category",
+    "position": 0,
+    "permissionsLocked": true
+  }
+]

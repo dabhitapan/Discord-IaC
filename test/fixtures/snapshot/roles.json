@@ -1,0 +1,12 @@
+[
+  {
+    "id": "fixture-guild",
+    "name": "@everyone",
+    "position": 0,
+    "managed": false,
+    "permissions": [],
+    "color": 0,
+    "hoist": false,
+    "mentionable": false
+  }
+]
