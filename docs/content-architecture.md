@@ -2,7 +2,7 @@
 
 ## Scope of this phase
 
-Phase 3 resolves manifest targets against the selected local desired-state profile. It extends the manifest, loader, parser, hashing, registry, plan artifact, and offline diff foundation without using exports, live Discord, or snowflake IDs. It does not translate content, contact Discord, or create, edit, pin, or delete messages.
+Phase 4 adds an explicitly invoked, strictly read-only live verifier for locally resolved destinations. Offline manifest validation, planning, diffing, hashing, and artifacts remain unchanged and credential-free. The verifier reads only guild and channel metadata; it does not inspect messages or create, edit, pin, or delete anything.
 
 ## Project layers
 
@@ -143,15 +143,44 @@ Loading, parsing, translation preparation, planning, and diffing must remain off
 
 ### Content Sync
 
-1. Add read-only live channel verification and drift modeling without writes.
-2. Define how verified logical identities bind to Discord channel IDs without changing manifests.
+1. Define how verified logical identities bind to Discord channel IDs without changing manifests.
+2. Add read-only message identity verification after a registry schema is designed.
 3. Extend the registry with Discord message IDs only when synchronization begins.
 4. Add a guarded writer that edits registered messages and creates only unregistered messages during explicit apply.
 5. Add convergence, idempotency, drift, pinning, and failure-recovery tests.
 
-Live resolution is deferred intentionally. The local desired profile proves intent and catches structural errors reproducibly; a future verifier can compare the resolved logical identity with live Discord without making the offline planner network-dependent. Discord channel IDs belong in verified runtime state, and message IDs belong in the registry after guarded synchronization—not in content manifests.
+Live verification is intentionally separate from offline resolution. The local desired profile proves intent reproducibly, while the verifier compares that identity with Discord only when explicitly invoked.
 
-### Translation
+## Read-only live destination verification
+
+`npm run content:verify` is the only Content-as-Code command in this phase that connects to Discord. It requires `DISCORD_TOKEN` and `GUILD_ID` from the centralized environment bootstrap. `PROFILE` selects both the content manifest and desired infrastructure profile as usual.
+
+The production adapter constructs the existing `Guilds`-intent client, logs in, fetches the configured guild and its channels, converts them immediately into plain minimal metadata, and destroys the client in `finally`. The pure verifier receives only `ReadOnlyDiscordGateway.fetchGuild()`. It has no Discord client, writer, manager, roles, permissions, members, messages, or mutation methods.
+
+Verification starts with Phase 3 local resolution and uses the strongest identity currently available:
+
+1. A locally known channel ID, if a future desired-profile schema provides one. No current profile does.
+2. A stable logical key mapped through local desired state. Current profiles do not store a live ID binding.
+3. Exact normalized channel name plus the expected normalized category name.
+4. Exact normalized channel name alone only when unique.
+
+No fuzzy matching or silent ambiguous binding is allowed. The live type must exactly match the locally resolved `text` or `announcement` type, and the parent category must match when expected.
+
+Statuses are `verified`, `not-configured`, `live-channel-missing`, `live-channel-type-mismatch`, `live-category-mismatch`, `live-channel-ambiguous`, `guild-mismatch`, `inaccessible`, and `skipped`. A `null` manifest target is `not-configured` and remains a warning. An unresolved configured local target is `skipped` and fails live verification because not every configured destination can be verified.
+
+Exit behavior:
+
+- `0`: guild identity verified and all configured destinations verified; `not-configured` warnings are allowed.
+- `1`: inaccessible/mismatched guild, live drift, ambiguity, or an unverifiable configured target.
+- `2`: required verification environment configuration is missing.
+
+`npm run content:verify -- --out reports/content-verification.json` writes a report only when explicitly requested. It contains the selected profile, configured guild ID, minimal live guild identity, ordered per-document results, summary, warnings, errors, safety statement, timestamp, and deterministic verification hash. The hash excludes its own field and `generatedAt`. Reports contain no token, absolute path, member data, permissions, or message data.
+
+Offline plans answer what content should exist and where it should go according to source control. Live verification answers whether those already-resolved destinations still exist with the expected identity. Keeping these paths separate prevents routine planning from gaining network or credential requirements.
+
+Message verification remains deferred because there are no message IDs or registry bindings yet. Destination identity must be trustworthy before a later phase can safely reason about existing Discord messages without reposting them. Discord channel IDs belong in verified runtime state, and message IDs belong in the registry after guarded synchronization—not in content manifests.
+
+## Translation roadmap
 
 1. Add per-language manifests and translation status metadata.
 2. Support checked-in human-authored translations first.
@@ -159,7 +188,7 @@ Live resolution is deferred intentionally. The local desired profile proves inte
 4. Plan and verify translations independently for each language.
 5. Never publish untranslated or unreviewed generated content implicitly.
 
-### Web UI
+## Web UI roadmap
 
 1. Expose read-only profile, snapshot, content, registry, and plan views through an application service boundary.
 2. Add local editing and validation without Discord credentials.

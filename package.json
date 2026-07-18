@@ -20,13 +20,13 @@
     "drift": "tsx src/engine/driftCli.ts --plan plans/wao-noobs.plan.json",
     "verify": "tsx src/engine/verify.ts",
     "cli": "tsx src/cli.ts",
-    "test": "tsx --test src/planner/diffEngine.test.ts src/engine/safety.test.ts src/config/profileSelection.test.ts src/config/environment.test.ts src/content/content.test.ts src/content/manifest.test.ts src/content/channelResolver.test.ts",
+    "test": "tsx --test src/planner/diffEngine.test.ts src/engine/safety.test.ts src/config/profileSelection.test.ts src/config/environment.test.ts src/content/content.test.ts src/content/manifest.test.ts src/content/channelResolver.test.ts src/content/verification.test.ts",
     "profile:init": "tsx src/config/profileInit.ts",
     "content:plan": "tsx src/content/command.ts plan",
     "content:diff": "tsx src/content/command.ts diff",
     "content:validate": "tsx src/content/command.ts validate",
     "content:apply": "tsx src/content/command.ts apply",
-    "content:verify": "tsx src/content/command.ts verify"
+    "content:verify": "tsx src/content/verificationCommand.ts"
   },
   "keywords": [
     "discord",

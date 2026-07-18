@@ -29,6 +29,7 @@ Discord IaC is an independent project and is not affiliated with, endorsed by, o
 - Validated per-profile content manifests with logical channel targets
 - Deterministic machine-readable content plans written only with explicit `--out`
 - Offline logical target resolution against desired-profile channel keys and names
+- Strictly read-only live verification of resolved content destinations
 
 ## Architecture
 
@@ -136,13 +137,18 @@ Logical normalization trims whitespace, lowercases text, collapses repeated spac
 | `npm run content:diff` | Compare English Markdown hashes with the local registry | Offline |
 | `npm run content:validate` | Validate content files and resolve logical targets against the selected desired profile | Offline |
 | `npm run content:apply` | Placeholder for future guarded content apply | Offline; no writes implemented |
-| `npm run content:verify` | Placeholder for future content verification | Offline |
+| `npm run content:verify` | Verify resolved content destinations against the configured live guild | Connects, read-only |
+| `npm run content:verify -- --out <path>` | Also write a machine-readable verification report | Connects, read-only |
 | `npm test` | Run focused tests for the pure diff engine | Offline |
 | `npm run typecheck` | Check TypeScript without emitting files | Offline |
 | `npm run build` | Compile TypeScript into `dist/` | Offline |
 | `npm start` | Run the compiled read-only exporter after a build | Connects |
 
 Online commands require valid environment configuration. `export` and `drift` are read-only. `apply` and non-dry-run `restore` can write only after their full safety workflows and exact guild-name confirmations.
+
+Content planning remains offline: `content:validate`, `content:plan`, and `content:diff` never require Discord credentials. `content:verify` requires `DISCORD_TOKEN` and `GUILD_ID`, connects with only the `Guilds` intent, fetches guild/channel metadata, and receives no Discord write adapter. It verifies guild identity, channel name, supported channel type, expected category, and uniqueness. It does not fetch or inspect messages.
+
+Content verification exits `0` when every configured destination verifies; unconfigured (`null`) targets remain warnings. Missing credentials, inaccessible or mismatched guilds, missing channels, type/category drift, ambiguity, or unresolved configured targets produce a non-zero exit. Reports are written only with `--out`, never contain the token or absolute local paths, and use a deterministic hash that excludes their generation timestamp.
 
 ## Safety model
 
@@ -158,6 +164,7 @@ Online commands require valid environment configuration. `export` and `drift` ar
 - Restore confirmation must exactly match `RESTORE <guild name>`.
 - Existing unmanaged resources and Community-designated channels remain untouched.
 - Exporting uses only the `Guilds` gateway intent and always destroys the client in a `finally` block.
+- Content verification receives only a narrow read-only gateway and always destroys its client in a `finally` block.
 
 ## WAO Noobs example
 
@@ -169,7 +176,7 @@ The Discord bot may continue to be named WAO Server Setup. Bot and server names 
 
 The v1.0 infrastructure foundation is complete. Community-as-Code will be introduced incrementally:
 
-1. **Content Sync:** extend the completed manifest, loading, parsing, hashing, registry, plan artifact, diff, and local target resolution foundation with read-only live verification, then guarded message updates.
+1. **Content Sync:** extend the completed manifest, planning, local resolution, and read-only live destination verification foundation with message identity modeling, then guarded message updates.
 2. **Translation:** checked-in human translations first, followed by optional provider adapters with explicit review and per-language planning. No translation or AI integration exists today.
 3. **Web UI:** read-only inspection and local editing first, then authenticated plan review using the same guarded engines as the CLI.
 
@@ -203,7 +210,7 @@ The read-only exporter requires:
 - `GUILD_ID`: Discord server to export
 - `PROFILE`: optional desired-profile key, such as `wao-noobs` or `titanz`; defaults to `wao-noobs`
 
-These variables are needed by online commands: `dev`, `export`, `start`, `drift`, `apply`, and `restore`. Do not commit `.env`, disclose token values, or place secrets in profiles, plans, backups, or snapshots.
+These variables are needed by online commands: `dev`, `export`, `start`, `drift`, `apply`, `restore`, and `content:verify`. Do not commit `.env`, disclose token values, or place secrets in profiles, plans, verification reports, backups, or snapshots.
 
 ## Known limitations
 

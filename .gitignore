@@ -13,6 +13,7 @@ dist/
 # Generated plans
 plans/
 backups/
+reports/
 
 # Local Content-as-Code comparison registries
 profiles/*/content/.content-registry.json
