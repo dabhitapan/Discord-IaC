@@ -48,7 +48,14 @@ export class DiscordWriter {
     if (!Array.isArray(permissions)) throw new SafetyError("Role permissions are unresolved.");
     const updated = await role.edit({
       name: typeof desired.name === "string" ? desired.name : role.name,
-      color: typeof desired.color === "number" ? desired.color : role.color,
+      colors: {
+        primaryColor:
+          typeof desired.color === "number"
+            ? desired.color
+            : role.colors.primaryColor,
+        secondaryColor: role.colors.secondaryColor,
+        tertiaryColor: role.colors.tertiaryColor,
+      },
       hoist: typeof desired.hoist === "boolean" ? desired.hoist : role.hoist,
       mentionable:
         typeof desired.mentionable === "boolean" ? desired.mentionable : role.mentionable,

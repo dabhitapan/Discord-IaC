@@ -11,7 +11,6 @@ import { DiscordWriter } from "../discord/writer.js";
 import { executeGuardedPlan, withClientCleanup } from "./engine.js";
 import { canonicalHash } from "../utils/canonicalJson.js";
 import { SafetyError } from "../engine/planSafety.js";
-import { reportCliError } from "../utils/cliError.js";
 
 function argument(name: string, fallback: string): string {
   const index = process.argv.indexOf(name);
@@ -79,7 +78,21 @@ async function main(): Promise<void> {
 
 if (require.main === module) {
   main().catch((error: unknown) => {
-    reportCliError(error);
+    console.error("\nFULL APPLY ERROR:");
+
+    if (error instanceof Error) {
+      console.error(error);
+      console.error("\nMessage:", error.message);
+      console.error("\nStack:", error.stack);
+
+      const errorWithCause = error as Error & { cause?: unknown };
+      if (errorWithCause.cause !== undefined) {
+        console.error("\nCause:", errorWithCause.cause);
+      }
+    } else {
+      console.error(error);
+    }
+
     process.exitCode = error instanceof SafetyError ? 2 : 1;
   });
 }
