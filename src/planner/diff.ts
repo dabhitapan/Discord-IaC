@@ -5,11 +5,13 @@ import { validateProfile } from "../config/profileValidator.js";
 import { createPlanDocument } from "./diffEngine.js";
 import { prettyCanonicalJson } from "../utils/canonicalJson.js";
 import { reportCliError } from "../utils/cliError.js";
+import { getProfileDirectory } from "../config/profileSelection.js";
 import { formatDetailedDiff } from "./diffFormatter.js";
 import { buildPlan } from "./resolver.js";
 import { loadSnapshot } from "./snapshotLoader.js";
 
 async function main(): Promise<void> {
+  await import("dotenv/config");
   const args = process.argv.slice(2);
   const jsonIndex = args.indexOf("--json");
   const jsonPath = jsonIndex >= 0 ? args[jsonIndex + 1] : undefined;
@@ -17,7 +19,7 @@ async function main(): Promise<void> {
     (_value, index) =>
       jsonIndex < 0 || (index !== jsonIndex && index !== jsonIndex + 1),
   );
-  const profileDirectory = positional[0] ?? "profiles/wao-noobs";
+  const profileDirectory = positional[0] ?? getProfileDirectory();
   const exportsDirectory = positional[1] ?? "exports";
   const profile = await loadProfile(profileDirectory);
   const errors = validateProfile(profile);
@@ -29,8 +31,9 @@ async function main(): Promise<void> {
   const document = createPlanDocument(profile, snapshot, plan);
 
   if (jsonIndex >= 0) {
-    if (!jsonPath) throw new Error("--json requires an output file path.");
-    const outputPath = path.resolve(jsonPath);
+    const outputPath = path.resolve(
+      jsonPath ?? `plans/${profile.metadata.key}.plan.json`,
+    );
     await mkdir(path.dirname(outputPath), { recursive: true });
     await writeFile(outputPath, prettyCanonicalJson(document), "utf8");
     console.log(`Deterministic plan JSON written to: ${outputPath}`);

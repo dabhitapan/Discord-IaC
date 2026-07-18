@@ -65,6 +65,7 @@ The two state directories serve different purposes:
 - `exports/` contains snapshots of the current live Discord server. Snapshots include Discord IDs because they describe existing resources.
 - `profiles/` contains desired server state. Profiles use stable logical keys and must not contain Discord IDs.
 - `profiles/wao-noobs/` is one concrete profile for the WAO Noobs server, not the identity of the generic tool.
+- `PROFILE` selects a desired profile directory. It defaults to `wao-noobs`, so existing commands remain backward-compatible.
 
 A profile defines metadata, ordered roles, categories, channels, role permissions, category overwrites, explicit channel overwrites, and permission-inheritance intent.
 
@@ -76,7 +77,8 @@ The concise planner answers which resources require attention. The detailed diff
 | --- | --- | --- |
 | `npm run dev` | Run the read-only exporter from TypeScript | Connects |
 | `npm run export` | Export the configured server to `exports/*.json` | Connects |
-| `npm run validate:profile` | Validate `profiles/wao-noobs` | Offline |
+| `npm run validate:profile` | Validate the selected `profiles/<PROFILE>` directory | Offline |
+| `npm run profile:init -- --profile <key> --source <snapshot>` | Initialize a desired profile while preserving the raw snapshot | Offline |
 | `npm run audit:snapshot` | Audit the local snapshot for structural and permission issues | Offline |
 | `npm run plan` | Compare the desired profile with local snapshots | Offline |
 | `npm run diff` | Print detailed field-level structured operations | Offline |
@@ -146,6 +148,7 @@ The read-only exporter requires:
 
 - `DISCORD_TOKEN`: bot token used to authenticate the Discord client
 - `GUILD_ID`: Discord server to export
+- `PROFILE`: optional desired-profile key, such as `wao-noobs` or `titanz`; defaults to `wao-noobs`
 
 These variables are needed by online commands: `dev`, `export`, `start`, `drift`, `apply`, and `restore`. Do not commit `.env`, disclose token values, or place secrets in profiles, plans, backups, or snapshots.
 

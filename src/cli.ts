@@ -1,5 +1,7 @@
 import { spawnSync } from "node:child_process";
 import path from "node:path";
+import "dotenv/config";
+import { getProfileDirectory, getSelectedProfileName } from "./config/profileSelection.js";
 
 const help = `Discord IaC CLI
 
@@ -35,9 +37,10 @@ function main(): void {
     console.log(help);
     return;
   }
-  const profile = option(args, "--profile", "profiles/wao-noobs");
+  const selectedProfile = getSelectedProfileName();
+  const profile = option(args, "--profile", getProfileDirectory(selectedProfile));
   const snapshot = option(args, "--snapshot", "exports");
-  const plan = option(args, "--plan", "plans/wao-noobs.plan.json");
+  const plan = option(args, "--plan", `plans/${selectedProfile}.plan.json`);
   const entries: Record<string, { file: string; args: string[]; label: string }> = {
     export: { file: "src/index.ts", args: [], label: "ONLINE READ-ONLY" },
     validate: {

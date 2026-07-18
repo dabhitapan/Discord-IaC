@@ -1,0 +1,40 @@
+[
+  {
+    "categoryKey": "text-channels",
+    "key": "general-chat",
+    "name": "general-chat",
+    "nsfw": false,
+    "permissionMode": "inherit",
+    "rateLimitPerUser": 0,
+    "topic": null,
+    "type": "GuildText"
+  },
+  {
+    "categoryKey": "text-channels",
+    "key": "technology-tips",
+    "name": "technology-tips",
+    "nsfw": false,
+    "permissionMode": "inherit",
+    "rateLimitPerUser": 0,
+    "topic": null,
+    "type": "GuildText"
+  },
+  {
+    "bitrate": 64000,
+    "categoryKey": "voice-channels",
+    "key": "lobby",
+    "name": "Lobby",
+    "permissionMode": "inherit",
+    "type": "GuildVoice",
+    "userLimit": 0
+  },
+  {
+    "bitrate": 64000,
+    "categoryKey": "voice-channels",
+    "key": "gaming",
+    "name": "Gaming",
+    "permissionMode": "inherit",
+    "type": "GuildVoice",
+    "userLimit": 0
+  }
+]

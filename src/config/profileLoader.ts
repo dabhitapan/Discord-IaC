@@ -8,6 +8,7 @@ import type {
   PermissionRule,
   ProfileMetadata,
 } from "../planner/types.js";
+import { getProfileDirectory } from "./profileSelection.js";
 
 async function readJson<T>(directory: string, fileName: string): Promise<T> {
   const filePath = path.join(directory, fileName);
@@ -19,7 +20,9 @@ async function readJson<T>(directory: string, fileName: string): Promise<T> {
   }
 }
 
-export async function loadProfile(profileDirectory: string): Promise<DesiredProfile> {
+export async function loadProfile(
+  profileDirectory = getProfileDirectory(),
+): Promise<DesiredProfile> {
   const directory = path.resolve(profileDirectory);
   const [metadata, roles, categories, channels, permissionRules] =
     await Promise.all([

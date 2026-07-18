@@ -11,6 +11,11 @@ import { DiscordWriter } from "../discord/writer.js";
 import { executeGuardedPlan, withClientCleanup } from "./engine.js";
 import { canonicalHash } from "../utils/canonicalJson.js";
 import { SafetyError } from "../engine/planSafety.js";
+import {
+  getProfileDirectory,
+  getProfileIdentity,
+  printProfileContext,
+} from "../config/profileSelection.js";
 
 function argument(name: string, fallback: string): string {
   const index = process.argv.indexOf(name);
@@ -19,8 +24,9 @@ function argument(name: string, fallback: string): string {
 
 async function main(): Promise<void> {
   await import("dotenv/config");
-  const planPath = argument("--plan", "plans/wao-noobs.plan.json");
-  const profilePath = argument("--profile", "profiles/wao-noobs");
+  const identity = await getProfileIdentity();
+  const planPath = argument("--plan", `plans/${identity.key}.plan.json`);
+  const profilePath = argument("--profile", getProfileDirectory(identity.key));
   const profile = await loadProfile(profilePath);
   const validationErrors = validateProfile(profile);
   if (validationErrors.length > 0) {
@@ -31,6 +37,7 @@ async function main(): Promise<void> {
   const guildId = process.env.GUILD_ID;
   if (!token || !guildId) throw new SafetyError("DISCORD_TOKEN and GUILD_ID are required.");
 
+  printProfileContext(identity);
   console.log("ONLINE GUARDED APPLY — Discord writes are possible after confirmation.");
   console.log(JSON.stringify(plan.summary, null, 2));
   plan.warnings.forEach((warning) => console.log(`WARNING: ${warning.label}`));

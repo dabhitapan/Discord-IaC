@@ -3,6 +3,7 @@ import { ChannelType, PermissionFlagsBits } from "discord.js";
 import { loadProfile } from "./profileLoader.js";
 import type { DesiredProfile } from "../planner/types.js";
 import { reportCliError } from "../utils/cliError.js";
+import { getProfileDirectory } from "./profileSelection.js";
 
 const validPermissions = new Set(Object.keys(PermissionFlagsBits));
 const supportedChannelTypes = new Set([
@@ -163,7 +164,8 @@ export function validateProfile(profile: DesiredProfile): string[] {
 }
 
 async function main(): Promise<void> {
-  const profileDirectory = process.argv[2] ?? "profiles/wao-noobs";
+  await import("dotenv/config");
+  const profileDirectory = process.argv[2] ?? getProfileDirectory();
   const profile = await loadProfile(profileDirectory);
   const errors = validateProfile(profile);
 

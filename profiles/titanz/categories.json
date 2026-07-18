@@ -1,0 +1,14 @@
+[
+  {
+    "key": "text-channels",
+    "name": "Text Channels"
+  },
+  {
+    "key": "voice-channels",
+    "name": "Voice Channels"
+  },
+  {
+    "key": "events",
+    "name": "Events"
+  }
+]

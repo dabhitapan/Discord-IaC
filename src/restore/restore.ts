@@ -11,6 +11,10 @@ import { canonicalHash } from "../utils/canonicalJson.js";
 import { orderOperations, SafetyError } from "../engine/planSafety.js";
 import { confirmationPhrase, requireConfirmation } from "../engine/confirmation.js";
 import { reportCliError } from "../utils/cliError.js";
+import {
+  getProfileIdentity,
+  printProfileContext,
+} from "../config/profileSelection.js";
 
 async function main(): Promise<void> {
   const dryRunIndex = process.argv.indexOf("--dry-run");
@@ -29,6 +33,8 @@ async function main(): Promise<void> {
   if (!token || !guildId) throw new SafetyError("DISCORD_TOKEN and GUILD_ID are required.");
   if (guildId !== backup.manifest.guildId) throw new SafetyError("Restore guild mismatch.");
 
+  const profile = await getProfileIdentity();
+  printProfileContext(profile);
   console.log(dryRunIndex >= 0 ? "ONLINE READ-ONLY RESTORE DRY RUN" : "ONLINE GUARDED RESTORE");
   const client = createDiscordClient();
   await withClientCleanup(client, async () => {

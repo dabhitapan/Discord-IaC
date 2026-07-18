@@ -5,9 +5,11 @@ import { formatPlan } from "./formatter.js";
 import { buildPlan } from "./resolver.js";
 import { loadSnapshot } from "./snapshotLoader.js";
 import { reportCliError } from "../utils/cliError.js";
+import { getProfileDirectory } from "../config/profileSelection.js";
 
 async function main(): Promise<void> {
-  const profileDirectory = process.argv[2] ?? "profiles/wao-noobs";
+  await import("dotenv/config");
+  const profileDirectory = process.argv[2] ?? getProfileDirectory();
   const exportsDirectory = process.argv[3] ?? "exports";
   const profile = await loadProfile(profileDirectory);
   const errors = validateProfile(profile);
