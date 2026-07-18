@@ -27,11 +27,19 @@ Discord IaC is an independent project and is not affiliated with, endorsed by, o
 
 ## Architecture
 
-Discord API access is isolated in the exporter. The validator, snapshot audit, resolver, formatter, and planner operate on local files and do not need a Discord connection.
+Discord IaC is evolving toward Community-as-Code. Infrastructure remains one independent layer, and the new Content layer provides architecture for permanent documentation and messages without implementing synchronization yet.
+
+The three project layers are:
+
+- **Infrastructure-as-Code:** desired roles, categories, channels, and permissions, compared with exported Discord snapshots.
+- **Content-as-Code:** future source-controlled rules, FAQ, guides, welcome messages, announcements, and event templates rendered from Markdown.
+- **Community-as-Code:** the long-term composition of infrastructure, content, translations, workflows, and a future Web UI.
+
+Discord API access remains isolated. Infrastructure validation and planning operate on local files. Future content loading, parsing, translation preparation, planning, and diffing must also remain offline; only an explicit guarded Content Apply may eventually write messages.
 
 At a high level, the exporter writes the current state to `exports/`. The profile loader reads desired state from `profiles/`. The offline planner resolves logical resources against the snapshot and produces descriptive actions such as `create`, `update`, `reorder`, and `sync-permissions`.
 
-See [Architecture](docs/architecture.md) for the complete current and intended data flows.
+See [Infrastructure architecture](docs/architecture.md) for existing data flows and [Content architecture](docs/content-architecture.md) for the new layer, message-registry design, safety model, and roadmap.
 
 ## Project structure
 
@@ -69,6 +77,8 @@ The two state directories serve different purposes:
 
 A profile defines metadata, ordered roles, categories, channels, role permissions, category overwrites, explicit channel overwrites, and permission-inheritance intent.
 
+Each profile may also contain canonical English Markdown under `content/english/` and future reviewed translations under `content/translations/`. These files are examples only in the current architecture phase and are not loaded by infrastructure commands.
+
 The concise planner answers which resources require attention. The detailed diff explains the exact field, permission, overwrite, and inheritance changes behind those actions. Both commands consume the same structured operations produced by the pure comparison layer; terminal formatting does not recalculate differences.
 
 ## Commands
@@ -90,6 +100,10 @@ The concise planner answers which resources require attention. The detailed diff
 | `npm run restore -- --dry-run <path>` | Preview conservative restore operations | Connects, read-only |
 | `npm run restore -- --backup <path>` | Guarded restore of supported existing resources | Connects, writes |
 | `npm run cli -- --help` | Show consolidated CLI commands and safety labels | Offline |
+| `npm run content:plan` | Placeholder for future offline content planning | Offline |
+| `npm run content:diff` | Placeholder for future offline content diffs | Offline |
+| `npm run content:apply` | Placeholder for future guarded content apply | Offline; no writes implemented |
+| `npm run content:verify` | Placeholder for future content verification | Offline |
 | `npm test` | Run focused tests for the pure diff engine | Offline |
 | `npm run typecheck` | Check TypeScript without emitting files | Offline |
 | `npm run build` | Compile TypeScript into `dist/` | Offline |
@@ -120,7 +134,13 @@ The Discord bot may continue to be named WAO Server Setup. Bot and server names 
 
 ## Roadmap
 
-The v1.0 foundation is complete. See [ROADMAP.md](ROADMAP.md) for post-v1 improvements such as broader resource coverage, richer restore verification, and multi-profile CLI ergonomics.
+The v1.0 infrastructure foundation is complete. Community-as-Code will be introduced incrementally:
+
+1. **Content Sync:** versioned manifests, deterministic Markdown parsing and hashing, a stable message registry, offline plans and diffs, then guarded message updates.
+2. **Translation:** checked-in human translations first, followed by optional provider adapters with explicit review and per-language planning. No translation or AI integration exists today.
+3. **Web UI:** read-only inspection and local editing first, then authenticated plan review using the same guarded engines as the CLI.
+
+See [ROADMAP.md](ROADMAP.md) for infrastructure improvements and [Content architecture](docs/content-architecture.md) for the detailed Community-as-Code roadmap.
 
 ## Local setup
 
