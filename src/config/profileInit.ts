@@ -1,3 +1,4 @@
+import "./bootstrap.js";
 import { initializeProfileFromSnapshot } from "./profileInitializer.js";
 import { reportCliError } from "../utils/cliError.js";
 

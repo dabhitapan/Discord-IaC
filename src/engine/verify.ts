@@ -1,3 +1,4 @@
+import "../config/bootstrap.js";
 import { loadProfile } from "../config/profileLoader.js";
 import { validateProfile } from "../config/profileValidator.js";
 import { createPlanDocument } from "../planner/diffEngine.js";
@@ -8,7 +9,6 @@ import { reportCliError } from "../utils/cliError.js";
 import { getProfileDirectory } from "../config/profileSelection.js";
 
 async function main(): Promise<void> {
-  await import("dotenv/config");
   const profilePath = process.argv[2] ?? getProfileDirectory();
   const snapshotPath = process.argv[3] ?? "exports";
   const profile = await loadProfile(profilePath);

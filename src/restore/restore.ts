@@ -1,3 +1,4 @@
+import "../config/bootstrap.js";
 import { createInterface } from "node:readline/promises";
 import { stdin, stdout } from "node:process";
 import { readFile } from "node:fs/promises";
@@ -27,7 +28,6 @@ async function main(): Promise<void> {
         : undefined;
   if (!backupPath) throw new SafetyError("Provide --dry-run <backup-path> or --backup <path>.");
   const backup = await loadBackup(backupPath);
-  await import("dotenv/config");
   const token = process.env.DISCORD_TOKEN;
   const guildId = process.env.GUILD_ID;
   if (!token || !guildId) throw new SafetyError("DISCORD_TOKEN and GUILD_ID are required.");

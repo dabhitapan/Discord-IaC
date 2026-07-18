@@ -1,3 +1,4 @@
+import "../config/bootstrap.js";
 import path from "node:path";
 import { loadSnapshot } from "./snapshotLoader.js";
 import type { LivePermissionOverwrite } from "./types.js";

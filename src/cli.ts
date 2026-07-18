@@ -1,6 +1,6 @@
+import "./config/bootstrap.js";
 import { spawnSync } from "node:child_process";
 import path from "node:path";
-import "dotenv/config";
 import { getProfileDirectory, getSelectedProfileName } from "./config/profileSelection.js";
 
 const help = `Discord IaC CLI

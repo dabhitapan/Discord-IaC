@@ -1,3 +1,4 @@
+import "./bootstrap.js";
 import path from "node:path";
 import { ChannelType, PermissionFlagsBits } from "discord.js";
 import { loadProfile } from "./profileLoader.js";
@@ -164,7 +165,6 @@ export function validateProfile(profile: DesiredProfile): string[] {
 }
 
 async function main(): Promise<void> {
-  await import("dotenv/config");
   const profileDirectory = process.argv[2] ?? getProfileDirectory();
   const profile = await loadProfile(profileDirectory);
   const errors = validateProfile(profile);

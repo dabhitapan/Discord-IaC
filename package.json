@@ -20,7 +20,7 @@
     "drift": "tsx src/engine/driftCli.ts --plan plans/wao-noobs.plan.json",
     "verify": "tsx src/engine/verify.ts",
     "cli": "tsx src/cli.ts",
-    "test": "tsx --test src/planner/diffEngine.test.ts src/engine/safety.test.ts src/config/profileSelection.test.ts",
+    "test": "tsx --test src/planner/diffEngine.test.ts src/engine/safety.test.ts src/config/profileSelection.test.ts src/config/environment.test.ts",
     "profile:init": "tsx src/config/profileInit.ts"
   },
   "keywords": [

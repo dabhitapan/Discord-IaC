@@ -1,3 +1,4 @@
+import "../config/bootstrap.js";
 import { createInterface } from "node:readline/promises";
 import { stdin, stdout } from "node:process";
 import { readFile } from "node:fs/promises";
@@ -23,7 +24,6 @@ function argument(name: string, fallback: string): string {
 }
 
 async function main(): Promise<void> {
-  await import("dotenv/config");
   const identity = await getProfileIdentity();
   const planPath = argument("--plan", `plans/${identity.key}.plan.json`);
   const profilePath = argument("--profile", getProfileDirectory(identity.key));

@@ -1,4 +1,4 @@
-import "dotenv/config";
+import "./config/bootstrap.js";
 import { createDiscordClient, fetchGuild, login } from "./discord.js";
 import { exportGuild } from "./exporter.js";
 import { logError, logExportSummary } from "./logger.js";

@@ -1,3 +1,4 @@
+import "../config/bootstrap.js";
 import { createDiscordClient, fetchGuild, login } from "../discord.js";
 import { collectGuildSnapshot } from "../exporter.js";
 import { loadPlanDocument } from "../planner/artifact.js";
@@ -11,7 +12,6 @@ import {
 } from "../config/profileSelection.js";
 
 async function main(): Promise<void> {
-  await import("dotenv/config");
   const planIndex = process.argv.indexOf("--plan");
   const plan = await loadPlanDocument(
     planIndex >= 0 ? (process.argv[planIndex + 1] ?? "") : "plans/wao-noobs.plan.json",

@@ -1,3 +1,4 @@
+import "../config/bootstrap.js";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { loadProfile } from "../config/profileLoader.js";
@@ -11,7 +12,6 @@ import { buildPlan } from "./resolver.js";
 import { loadSnapshot } from "./snapshotLoader.js";
 
 async function main(): Promise<void> {
-  await import("dotenv/config");
   const args = process.argv.slice(2);
   const jsonIndex = args.indexOf("--json");
   const jsonPath = jsonIndex >= 0 ? args[jsonIndex + 1] : undefined;
