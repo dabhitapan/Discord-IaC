@@ -26,6 +26,9 @@ Discord IaC is an independent project and is not affiliated with, endorsed by, o
 - No deletion support
 - Deterministic offline Content-as-Code loading, Markdown block parsing, hashing, planning, and diffing
 - Local profile-scoped content registry format without Discord message IDs
+- Validated per-profile content manifests with logical channel targets
+- Deterministic machine-readable content plans written only with explicit `--out`
+- Offline logical target resolution against desired-profile channel keys and names
 
 ## Architecture
 
@@ -79,9 +82,35 @@ The two state directories serve different purposes:
 
 A profile defines metadata, ordered roles, categories, channels, role permissions, category overwrites, explicit channel overwrites, and permission-inheritance intent.
 
-Each profile may also contain canonical English Markdown under `content/english/` and future reviewed translations under `content/translations/`. These files are examples only in the current architecture phase and are not loaded by infrastructure commands.
+Each profile may also contain canonical English Markdown under `content/english/`, an authoritative `content/content.json` manifest, and future reviewed translations under `content/translations/`. Infrastructure commands do not load these files.
 
 The concise planner answers which resources require attention. The detailed diff explains the exact field, permission, overwrite, and inheritance changes behind those actions. Both commands consume the same structured operations produced by the pure comparison layer; terminal formatting does not recalculate differences.
+
+## Content manifests
+
+`profiles/<PROFILE>/content/content.json` declares exactly which Markdown documents Content-as-Code manages. Files not declared by the manifest are warned about and never planned automatically.
+
+```json
+{
+  "version": 1,
+  "sourceLanguage": "en",
+  "documents": [
+    {
+      "id": "rules",
+      "file": "english/rules.md",
+      "targetChannel": "rules",
+      "order": 10,
+      "enabled": true,
+      "pinned": true,
+      "languages": ["en"]
+    }
+  ]
+}
+```
+
+`targetChannel` is a logical channel name or profile key, not a Discord ID. Resolution uses the selected local desired-state profile—never exports or live Discord—and prefers exact channel keys before normalized names. Use `null` when placement is not yet known; planning reports this explicitly. The validator rejects unsupported versions or languages, duplicate IDs/files/orders, invalid booleans or targets, missing Markdown, unsafe paths, manifests without an enabled document, ambiguous targets, and unsupported destination types.
+
+Logical normalization trims whitespace, lowercases text, collapses repeated spaces or hyphens, and treats spaces and Discord-style hyphens consistently. It does not perform fuzzy matching. Text and announcement channels are supported. Forum, voice, and category targets are rejected because ordinary message placement is not defined for them. Missing matches and `null` targets remain warnings so profiles can be completed incrementally.
 
 ## Commands
 
@@ -103,7 +132,9 @@ The concise planner answers which resources require attention. The detailed diff
 | `npm run restore -- --backup <path>` | Guarded restore of supported existing resources | Connects, writes |
 | `npm run cli -- --help` | Show consolidated CLI commands and safety labels | Offline |
 | `npm run content:plan` | Build an offline content plan from English Markdown and the local registry | Offline |
+| `npm run content:plan -- --out <path>` | Also write a deterministic machine-readable plan artifact | Offline |
 | `npm run content:diff` | Compare English Markdown hashes with the local registry | Offline |
+| `npm run content:validate` | Validate content files and resolve logical targets against the selected desired profile | Offline |
 | `npm run content:apply` | Placeholder for future guarded content apply | Offline; no writes implemented |
 | `npm run content:verify` | Placeholder for future content verification | Offline |
 | `npm test` | Run focused tests for the pure diff engine | Offline |
@@ -138,7 +169,7 @@ The Discord bot may continue to be named WAO Server Setup. Bot and server names 
 
 The v1.0 infrastructure foundation is complete. Community-as-Code will be introduced incrementally:
 
-1. **Content Sync:** extend the completed offline loading, parsing, hashing, registry, planning, and diff foundation with channel manifests, verification, then guarded message updates.
+1. **Content Sync:** extend the completed manifest, loading, parsing, hashing, registry, plan artifact, diff, and local target resolution foundation with read-only live verification, then guarded message updates.
 2. **Translation:** checked-in human translations first, followed by optional provider adapters with explicit review and per-language planning. No translation or AI integration exists today.
 3. **Web UI:** read-only inspection and local editing first, then authenticated plan review using the same guarded engines as the CLI.
 

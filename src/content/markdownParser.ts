@@ -91,6 +91,12 @@ export class DeterministicMarkdownParser implements MarkdownParser {
       profileKey: document.profileKey,
       key: document.key,
       language: document.language,
+      sourceFile: document.sourceFile,
+      requestedLanguages: document.requestedLanguages,
+      targetChannel: document.targetChannel,
+      order: document.order,
+      pinned: document.pinned,
+      enabled: document.enabled,
       documentHash: contentHash(markdown),
       blocks: parseBlocks(markdown),
     };

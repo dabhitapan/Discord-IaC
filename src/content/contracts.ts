@@ -2,18 +2,27 @@ import type {
   ContentApplyResult,
   ContentDocument,
   ContentDocumentChange,
+  DocumentTargetResolution,
+  ContentLoadResult,
   ContentMessageIdentity,
   ContentOperation,
   ContentPlan,
+  ContentPlanningContext,
   ContentRegistryFile,
+  ContentTargetResolution,
   ContentVerificationResult,
   MessageRegistryEntry,
   ParsedContent,
   TranslationRequest,
 } from "./types.js";
+import type { DesiredProfile } from "../planner/types.js";
 
 export interface ContentLoader {
   load(profileDirectory: string): Promise<readonly ContentDocument[]>;
+}
+
+export interface ContentProfileLoader extends ContentLoader {
+  loadProfile(profileDirectory: string): Promise<ContentLoadResult>;
 }
 
 export interface MarkdownParser {
@@ -45,6 +54,7 @@ export interface Planner {
     profileKey: string,
     documents: readonly ParsedContent[],
     registry: ContentRegistryFile,
+    context?: ContentPlanningContext,
   ): Promise<ContentPlan>;
 }
 
@@ -57,7 +67,12 @@ export interface ContentDiffEngine {
     profileKey: string,
     documents: readonly ParsedContent[],
     registry: ContentRegistryFile,
+    targetResolutions?: readonly DocumentTargetResolution[],
   ): Promise<readonly ContentDocumentChange[]>;
+}
+
+export interface LogicalChannelResolver {
+  resolve(requested: string | null, profile: DesiredProfile): ContentTargetResolution;
 }
 
 export interface ContentApplyEngine {

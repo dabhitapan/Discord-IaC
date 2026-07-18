@@ -4,9 +4,10 @@ import type { ContentRegistry } from "./contracts.js";
 import type {
   ContentRegistryDocument,
   ContentRegistryFile,
+  ContentRegistryState,
   ParsedContent,
 } from "./types.js";
-import { prettyCanonicalJson } from "../utils/canonicalJson.js";
+import { canonicalHash, prettyCanonicalJson } from "../utils/canonicalJson.js";
 
 export const CONTENT_REGISTRY_FILENAME = ".content-registry.json";
 
@@ -71,11 +72,18 @@ export class FileContentRegistry implements ContentRegistry {
   }
 
   async load(profileKey: string): Promise<ContentRegistryFile> {
+    return (await this.loadState(profileKey)).registry;
+  }
+
+  async loadState(profileKey: string): Promise<ContentRegistryState> {
     try {
       const value: unknown = JSON.parse(await readFile(this.filePath, "utf8"));
-      return validateRegistry(value, profileKey);
+      const registry = validateRegistry(value, profileKey);
+      return { registry, hash: canonicalHash(registry) };
     } catch (error) {
-      if ((error as NodeJS.ErrnoException).code === "ENOENT") return emptyRegistry(profileKey);
+      if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+        return { registry: emptyRegistry(profileKey), hash: null };
+      }
       throw new Error(`Could not load content registry from ${this.filePath}.`, { cause: error });
     }
   }

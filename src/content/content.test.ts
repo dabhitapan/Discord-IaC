@@ -38,6 +38,12 @@ function sourceDocument(value = markdown): ContentDocument {
     key: "rules",
     language: "en",
     sourcePath: "rules.md",
+    sourceFile: "english/rules.md",
+    requestedLanguages: ["en"],
+    targetChannel: "rules",
+    order: 10,
+    pinned: true,
+    enabled: true,
     markdown: value,
   };
 }
@@ -75,7 +81,7 @@ test("block and document hashes are deterministic SHA256 values", async () => {
   );
 });
 
-test("content loader loads every English Markdown file in deterministic order", async (context) => {
+test("content loader loads declared English Markdown files in deterministic order", async (context) => {
   const directory = await mkdtemp(path.join(os.tmpdir(), "discord-iac-content-loader-"));
   context.after(() => rm(directory, { recursive: true, force: true }));
   const english = path.join(directory, "content", "english");
@@ -83,6 +89,34 @@ test("content loader loads every English Markdown file in deterministic order", 
   await writeFile(path.join(english, "welcome.md"), "Welcome\r\n", "utf8");
   await writeFile(path.join(english, "faq.md"), "FAQ\n", "utf8");
   await writeFile(path.join(english, "ignored.txt"), "Ignored", "utf8");
+  await writeFile(
+    path.join(directory, "content", "content.json"),
+    JSON.stringify({
+      version: 1,
+      sourceLanguage: "en",
+      documents: [
+        {
+          id: "faq",
+          file: "english/faq.md",
+          targetChannel: "faq",
+          order: 10,
+          enabled: true,
+          pinned: false,
+          languages: ["en"],
+        },
+        {
+          id: "welcome",
+          file: "english/welcome.md",
+          targetChannel: null,
+          order: 20,
+          enabled: true,
+          pinned: false,
+          languages: ["en"],
+        },
+      ],
+    }),
+    "utf8",
+  );
 
   const documents = await new FileContentLoader().load(directory);
   assert.deepEqual(documents.map((document) => document.key), ["faq", "welcome"]);
@@ -105,6 +139,12 @@ test("planner reports create, update, and unchanged documents from local state",
     create: 1,
     update: 0,
     unchanged: 0,
+    warnings: 1,
+    resolvedTargets: 0,
+    unresolvedTargets: 1,
+    notConfigured: 0,
+    ambiguousTargets: 0,
+    invalidTargets: 0,
   });
 
   const matching = registryFromDocuments("test-profile", [parsed]);

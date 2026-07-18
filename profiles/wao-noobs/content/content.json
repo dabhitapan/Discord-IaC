@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "sourceLanguage": "en",
+  "documents": [
+    {
+      "id": "rules",
+      "file": "english/rules.md",
+      "targetChannel": "rules",
+      "order": 10,
+      "enabled": true,
+      "pinned": true,
+      "languages": ["en"]
+    },
+    {
+      "id": "faq",
+      "file": "english/faq.md",
+      "targetChannel": null,
+      "order": 20,
+      "enabled": true,
+      "pinned": false,
+      "languages": ["en"]
+    },
+    {
+      "id": "welcome",
+      "file": "english/welcome.md",
+      "targetChannel": null,
+      "order": 30,
+      "enabled": true,
+      "pinned": false,
+      "languages": ["en"]
+    },
+    {
+      "id": "beginner-guide",
+      "file": "english/beginner-guide.md",
+      "targetChannel": null,
+      "order": 40,
+      "enabled": true,
+      "pinned": false,
+      "languages": ["en"]
+    },
+    {
+      "id": "events",
+      "file": "english/events.md",
+      "targetChannel": "events",
+      "order": 50,
+      "enabled": true,
+      "pinned": false,
+      "languages": ["en"]
+    }
+  ]
+}
