@@ -1,9 +1,11 @@
 import type {
   ContentApplyResult,
   ContentDocument,
+  ContentDocumentChange,
   ContentMessageIdentity,
   ContentOperation,
   ContentPlan,
+  ContentRegistryFile,
   ContentVerificationResult,
   MessageRegistryEntry,
   ParsedContent,
@@ -28,6 +30,11 @@ export interface MessageRegistry {
   save(entry: MessageRegistryEntry): Promise<void>;
 }
 
+export interface ContentRegistry {
+  load(profileKey: string): Promise<ContentRegistryFile>;
+  save(registry: ContentRegistryFile): Promise<void>;
+}
+
 export interface DiscordContentWriter {
   create(operation: ContentOperation): Promise<MessageRegistryEntry>;
   update(operation: ContentOperation): Promise<MessageRegistryEntry>;
@@ -37,7 +44,7 @@ export interface Planner {
   plan(
     profileKey: string,
     documents: readonly ParsedContent[],
-    registryEntries: readonly MessageRegistryEntry[],
+    registry: ContentRegistryFile,
   ): Promise<ContentPlan>;
 }
 
@@ -49,8 +56,8 @@ export interface ContentDiffEngine {
   diff(
     profileKey: string,
     documents: readonly ParsedContent[],
-    registryEntries: readonly MessageRegistryEntry[],
-  ): Promise<readonly ContentOperation[]>;
+    registry: ContentRegistryFile,
+  ): Promise<readonly ContentDocumentChange[]>;
 }
 
 export interface ContentApplyEngine {

@@ -2,7 +2,7 @@
 
 ## Scope of this phase
 
-This phase establishes contracts, source layout, and safety boundaries only. It does not parse Markdown, translate content, maintain registry state, contact Discord, or create or edit messages.
+Phase 1 implements deterministic English Markdown loading, block parsing, SHA256 hashing, a local registry format, and offline plan and diff commands. It does not translate content, contact Discord, or create, edit, or delete messages.
 
 ## Project layers
 
@@ -28,6 +28,8 @@ profiles/<profile>/content/
     `-- <language-code>/       future translated Markdown
 ```
 
+The optional local comparison baseline is stored at `profiles/<profile>/content/.content-registry.json`. It is ignored by Git by default. Planning and diff commands only read this file; they never create or update it.
+
 English is canonical. Planned translation language codes are `fr`, `de`, `es`, `pt`, `tr`, `ru`, and `zh`. Translated files must remain derived, reviewable content; no translation provider or AI service is configured in this phase.
 
 ## Content registry design
@@ -41,21 +43,21 @@ profile + content key + block key + language
 
 For example, the `rules` source can resolve to the existing rules message ID. A subsequent plan can compare the desired content hash with the registry hash and produce an `update` operation against that message rather than reposting it.
 
-Only the registry interfaces and data types exist today. No registry file or database is created. Future registry storage must be deterministic, profile-scoped, auditable, and updated only after a successful Discord write. Secrets and message content must not be stored in the registry.
+The Phase 1 registry contains the profile key and each document's language, SHA256 hash, stable block IDs, and block hashes. It intentionally contains no Discord channel or message IDs. The file-backed implementation validates profile identity and writes deterministic, two-space-indented JSON atomically when explicitly called by future tooling. Plan and diff remain read-only.
 
 ## Component contracts
 
-- `ContentLoader` discovers profile content without Discord access.
-- `MarkdownParser` converts one source document into deterministic message-sized blocks.
+- `ContentLoader` discovers English profile content without Discord access; `FileContentLoader` is the Phase 1 implementation.
+- `MarkdownParser` converts one source document into deterministic blocks; `DeterministicMarkdownParser` preserves Markdown source without rendering it.
 - `TranslationProvider` is an optional future boundary; there is no implementation or external provider today.
 - `MessageRegistry` resolves stable content identities to Discord channel and message IDs.
 - `DiscordContentWriter` is the future isolated adapter for creating or updating messages.
-- `Planner` creates a reviewable content plan.
-- `ContentDiffEngine` compares parsed desired content with registry state.
+- `Planner` creates a reviewable content plan; `OfflineContentPlanner` is implemented.
+- `ContentDiffEngine` compares parsed desired content with registry state; `OfflineContentDiffEngine` is implemented.
 - `Verifier` checks a plan or applied state without changing it.
 - `ContentApplyEngine` is the only future orchestration boundary allowed to invoke writes.
 
-The contracts are defined in `src/content/contracts.ts`; their shared data model is in `src/content/types.ts`; source and translation defaults are in `src/content/config.ts`.
+The contracts are defined in `src/content/contracts.ts`; their shared data model is in `src/content/types.ts`; source and translation defaults are in `src/content/config.ts`. `FileContentRegistry` implements the local Phase 1 comparison registry.
 
 ## Safety flow
 
@@ -72,12 +74,11 @@ Loading, parsing, translation preparation, planning, and diffing must remain off
 ### Content Sync
 
 1. Define a versioned profile content manifest and channel targets.
-2. Implement deterministic loading, Markdown parsing, splitting, and hashing.
-3. Implement a file-backed registry with validation and atomic updates.
-4. Add pure content diff and deterministic plan artifacts.
-5. Add read-only Discord verification.
-6. Add a guarded writer that edits registered messages and creates only unregistered messages during explicit apply.
-7. Add convergence, idempotency, drift, and failure-recovery tests.
+2. Extend the local registry with Discord identifiers only when synchronization begins.
+3. Add deterministic machine-readable content plan artifacts.
+4. Add read-only Discord verification.
+5. Add a guarded writer that edits registered messages and creates only unregistered messages during explicit apply.
+6. Add convergence, idempotency, drift, and failure-recovery tests.
 
 ### Translation
 

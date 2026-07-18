@@ -14,6 +14,10 @@ dist/
 plans/
 backups/
 
+# Local Content-as-Code comparison registries
+profiles/*/content/.content-registry.json
+profiles/*/content/.content-registry.json.tmp
+
 # Live Discord exports (keep folder only)
 exports/*
 !exports/.gitkeep

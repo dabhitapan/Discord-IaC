@@ -36,15 +36,27 @@ export interface ContentDocument {
 }
 
 export interface ParsedContent {
+  profileKey: string;
   key: ContentKey;
   language: ContentLanguage;
+  documentHash: string;
   blocks: readonly ContentBlock[];
 }
 
 export interface ContentBlock {
   key: string;
+  kind: ContentBlockKind;
   markdown: string;
+  hash: string;
 }
+
+export type ContentBlockKind =
+  | "heading"
+  | "paragraph"
+  | "list"
+  | "code"
+  | "quote"
+  | "horizontal-rule";
 
 export interface TranslationRequest {
   document: ContentDocument;
@@ -64,6 +76,24 @@ export interface MessageRegistryEntry extends ContentMessageIdentity {
   contentHash: string;
 }
 
+export interface ContentRegistryBlock {
+  id: string;
+  hash: string;
+}
+
+export interface ContentRegistryDocument {
+  document: ContentKey;
+  language: ContentLanguage;
+  hash: string;
+  blocks: readonly ContentRegistryBlock[];
+}
+
+export interface ContentRegistryFile {
+  schemaVersion: 1;
+  profile: string;
+  documents: readonly ContentRegistryDocument[];
+}
+
 export type ContentAction = "create" | "update" | "unchanged";
 
 export interface ContentOperation {
@@ -79,7 +109,25 @@ export interface ContentOperation {
 export interface ContentPlan {
   schemaVersion: 1;
   profileKey: string;
-  operations: readonly ContentOperation[];
+  documents: readonly ContentDocumentChange[];
+  summary: ContentPlanSummary;
+}
+
+export interface ContentDocumentChange {
+  action: ContentAction;
+  document: ContentKey;
+  language: ContentLanguage;
+  currentHash: string | null;
+  desiredHash: string;
+  blocks: readonly ContentBlock[];
+}
+
+export interface ContentPlanSummary {
+  documents: number;
+  blocks: number;
+  create: number;
+  update: number;
+  unchanged: number;
 }
 
 export interface ContentVerificationResult {

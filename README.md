@@ -24,6 +24,8 @@ Discord IaC is an independent project and is not affiliated with, endorsed by, o
 - Conservative restore for existing resources
 - Live read-only drift detection and offline verification
 - No deletion support
+- Deterministic offline Content-as-Code loading, Markdown block parsing, hashing, planning, and diffing
+- Local profile-scoped content registry format without Discord message IDs
 
 ## Architecture
 
@@ -100,8 +102,8 @@ The concise planner answers which resources require attention. The detailed diff
 | `npm run restore -- --dry-run <path>` | Preview conservative restore operations | Connects, read-only |
 | `npm run restore -- --backup <path>` | Guarded restore of supported existing resources | Connects, writes |
 | `npm run cli -- --help` | Show consolidated CLI commands and safety labels | Offline |
-| `npm run content:plan` | Placeholder for future offline content planning | Offline |
-| `npm run content:diff` | Placeholder for future offline content diffs | Offline |
+| `npm run content:plan` | Build an offline content plan from English Markdown and the local registry | Offline |
+| `npm run content:diff` | Compare English Markdown hashes with the local registry | Offline |
 | `npm run content:apply` | Placeholder for future guarded content apply | Offline; no writes implemented |
 | `npm run content:verify` | Placeholder for future content verification | Offline |
 | `npm test` | Run focused tests for the pure diff engine | Offline |
@@ -136,7 +138,7 @@ The Discord bot may continue to be named WAO Server Setup. Bot and server names 
 
 The v1.0 infrastructure foundation is complete. Community-as-Code will be introduced incrementally:
 
-1. **Content Sync:** versioned manifests, deterministic Markdown parsing and hashing, a stable message registry, offline plans and diffs, then guarded message updates.
+1. **Content Sync:** extend the completed offline loading, parsing, hashing, registry, planning, and diff foundation with channel manifests, verification, then guarded message updates.
 2. **Translation:** checked-in human translations first, followed by optional provider adapters with explicit review and per-language planning. No translation or AI integration exists today.
 3. **Web UI:** read-only inspection and local editing first, then authenticated plan review using the same guarded engines as the CLI.
 
