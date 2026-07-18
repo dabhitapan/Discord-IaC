@@ -28,13 +28,24 @@ import type {
 interface Resolution<T> {
   match?: T;
   ambiguous: boolean;
+  candidates?: T[];
+  strategy?: "desired-parent" | "exact-name" | "normalized-name";
 }
 
 function resolveUnique<T>(candidates: T[]): Resolution<T> {
   return {
     match: candidates.length === 1 ? candidates[0] : undefined,
     ambiguous: candidates.length > 1,
+    ...(candidates.length > 1 ? { candidates } : {}),
   };
+}
+
+function normalizeChannelName(value: string): string {
+  return value.trim().toLowerCase().replace(/[\s-]+/g, "-");
+}
+
+function compatibleChannelType(desired: DesiredChannel, live: LiveChannel): boolean {
+  return desired.type === live.type;
 }
 
 export function resolveRole(name: string, roles: LiveRole[]): Resolution<LiveRole> {
@@ -54,14 +65,35 @@ export function resolveChannel(
   snapshot: LiveSnapshot,
 ): Resolution<LiveChannel> {
   const parent = resolveCategory(desiredCategory.name, snapshot.categories);
-  if (!parent.match || parent.ambiguous) return { ambiguous: parent.ambiguous };
+  if (parent.ambiguous) return { ambiguous: true, candidates: [] };
 
-  return resolveUnique(
-    snapshot.channels.filter(
+  if (parent.match) {
+    const underDesiredParent = snapshot.channels.filter(
       (channel) =>
-        channel.name === desired.name && channel.parentId === parent.match?.id,
-    ),
+        channel.parentId === parent.match?.id &&
+        channel.name === desired.name &&
+        compatibleChannelType(desired, channel),
+    );
+    if (underDesiredParent.length > 0) {
+      return { ...resolveUnique(underDesiredParent), strategy: "desired-parent" };
+    }
+  }
+
+  const exactName = snapshot.channels.filter(
+    (channel) =>
+      channel.name === desired.name && compatibleChannelType(desired, channel),
   );
+  if (exactName.length > 0) {
+    return { ...resolveUnique(exactName), strategy: "exact-name" };
+  }
+
+  const normalizedName = normalizeChannelName(desired.name);
+  const normalized = snapshot.channels.filter(
+    (channel) =>
+      normalizeChannelName(channel.name) === normalizedName &&
+      compatibleChannelType(desired, channel),
+  );
+  return { ...resolveUnique(normalized), strategy: "normalized-name" };
 }
 
 function sameSet(left: string[], right: string[]): boolean {
@@ -385,11 +417,41 @@ export function buildPlan(
   const categoriesByKey = new Map(
     profile.categories.map((category) => [category.key, category]),
   );
+  const channelResolutions = new Map<string, Resolution<LiveChannel>>();
+  for (const desired of profile.channels) {
+    const category = categoriesByKey.get(desired.categoryKey);
+    if (category) channelResolutions.set(desired.key, resolveChannel(desired, category, snapshot));
+  }
+  const desiredByMatchedChannel = new Map<
+    string,
+    Array<{ key: string; resolution: Resolution<LiveChannel> }>
+  >();
+  for (const [key, resolution] of channelResolutions) {
+    if (!resolution.match) continue;
+    const claimants = desiredByMatchedChannel.get(resolution.match.id) ?? [];
+    claimants.push({ key, resolution });
+    desiredByMatchedChannel.set(resolution.match.id, claimants);
+  }
+  for (const claimants of desiredByMatchedChannel.values()) {
+    if (claimants.length < 2) continue;
+    const desiredParentClaims = claimants.filter(
+      ({ resolution }) => resolution.strategy === "desired-parent",
+    );
+    for (const claimant of claimants) {
+      if (desiredParentClaims.length === 1 && claimant === desiredParentClaims[0]) continue;
+      channelResolutions.set(claimant.key, {
+        ambiguous: desiredParentClaims.length !== 1,
+        candidates: claimant.resolution.match ? [claimant.resolution.match] : [],
+      });
+    }
+  }
   const liveChannelByDesiredKey = new Map<string, LiveChannel>();
   for (const desired of profile.channels) {
     const desiredCategory = categoriesByKey.get(desired.categoryKey);
     if (!desiredCategory) continue;
-    const resolution = resolveChannel(desired, desiredCategory, snapshot);
+    const resolution = channelResolutions.get(desired.key) ?? {
+      ambiguous: false,
+    };
     const label = `${desiredCategory.name} / ${desired.name}`;
     const parentResolution = resolveCategory(desiredCategory.name, snapshot.categories);
     const desiredIdentity: ResourceIdentity = {
@@ -402,11 +464,28 @@ export function buildPlan(
       },
     };
     if (resolution.ambiguous) {
+      const candidates = [...(resolution.candidates ?? [])].sort((left, right) =>
+        left.id.localeCompare(right.id),
+      );
       result.channels.push(
-        action("warning", label, "Ambiguous exact-name and parent match.", {
-          resourceType: "channel",
-          identity: desiredIdentity,
-        }),
+        action(
+          "warning",
+          label,
+          "Ambiguous type-compatible channel identity match; manual binding is required.",
+          {
+            resourceType: "channel",
+            identity: desiredIdentity,
+            currentState: {
+              candidates: candidates.map((candidate) => ({
+                id: candidate.id,
+                name: candidate.name,
+                type: candidate.type,
+                parentId: candidate.parentId,
+              })),
+            },
+            ambiguous: true,
+          },
+        ),
       );
     } else if (!resolution.match) {
       result.channels.push(
@@ -444,10 +523,15 @@ export function buildPlan(
       matchedChannelIds.add(live.id);
       liveChannelByDesiredKey.set(desired.key, live);
       const identity = { ...desiredIdentity, discordId: live.id };
+      const currentParent = snapshot.categories.find(
+        (category) => category.id === live.parentId,
+      );
+      const parentChanged =
+        !parentResolution.match || live.parentId !== parentResolution.match.id;
       const channelFieldChanges = [
-        ...(live.type === desired.type
+        ...(live.name === desired.name
           ? []
-          : [fieldChange("type", live.type, desired.type)]),
+          : [fieldChange("name", live.name, desired.name)]),
         ...optionalFieldChanges(
           live as unknown as Record<string, unknown>,
           desired as unknown as Record<string, unknown>,
@@ -462,7 +546,49 @@ export function buildPlan(
           ],
         ),
       ];
-      if (channelFieldChanges.length > 0) {
+      const desiredOrder = profile.channels
+        .filter((channel) => channel.categoryKey === desired.categoryKey)
+        .findIndex((channel) => channel.key === desired.key);
+      const moveFieldChanges = parentChanged
+        ? [
+            fieldChange("parent", currentParent?.name ?? null, desiredCategory.name),
+            ...(live.position === desiredOrder
+              ? []
+              : [fieldChange("order", live.position, desiredOrder)]),
+          ]
+        : [];
+      if (parentChanged) {
+        const moveAction = channelFieldChanges.length > 0 ? "move-and-update" : "move";
+        const from = currentParent?.name ?? "uncategorized";
+        result.channels.push(
+          action(
+            moveAction,
+            label,
+            channelFieldChanges.length > 0
+              ? `Move from ${from} to ${desiredCategory.name} and update channel fields.`
+              : `Move from ${from} to ${desiredCategory.name}.`,
+            {
+              resourceType: "channel",
+              identity,
+              fieldChanges: [...moveFieldChanges, ...channelFieldChanges],
+              currentState: {
+                name: live.name,
+                type: live.type,
+                parent: currentParent?.name ?? null,
+                position: live.position,
+              },
+              desiredState: {
+                name: desired.name,
+                type: desired.type,
+                parent: desiredCategory.name,
+                position: desiredOrder,
+              },
+              dependencies: [desiredCategory.key],
+              supported: false,
+            },
+          ),
+        );
+      } else if (channelFieldChanges.length > 0) {
         result.channels.push(
           action("update", label, "Channel fields differ.", {
             resourceType: "channel",
@@ -479,9 +605,7 @@ export function buildPlan(
               fieldChange(
                 "order",
                 live.position,
-                profile.channels
-                  .filter((channel) => channel.categoryKey === desired.categoryKey)
-                  .findIndex((channel) => channel.key === desired.key),
+                desiredOrder,
               ),
             ],
           }),
@@ -675,7 +799,7 @@ export function buildPlan(
         action(
           "sync-permissions",
           label,
-          "New or ambiguous channel must inherit its parent category overwrites.",
+          "Channel must inherit its parent category overwrites once it exists.",
           {
             resourceType: "permission-sync",
             identity,
@@ -883,7 +1007,7 @@ export function buildPlan(
       action(
         "warning",
         `Category: ${category.name}`,
-        "Unmanaged existing category; deletion is not supported.",
+        "Unmanaged cleanup candidate; deletion is not supported or planned.",
       ),
     );
   }

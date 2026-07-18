@@ -173,8 +173,8 @@ test("WAO and Titanz manifests validate against only their local profiles", asyn
     ["resolved", "not-configured", "not-configured", "not-configured", "resolved"],
   );
   assert.equal(wao.targetWarnings.length, 3);
-  assert.ok(titanz.targetResolutions.every((entry) => entry.resolution.status === "not-configured"));
-  assert.equal(titanz.targetWarnings.length, 5);
+  assert.ok(titanz.targetResolutions.every((entry) => entry.resolution.status === "resolved"));
+  assert.equal(titanz.targetWarnings.length, 0);
 });
 
 test("resolution data changes the deterministic plan hash", async () => {

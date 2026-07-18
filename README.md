@@ -43,7 +43,11 @@ The three project layers are:
 
 Discord API access remains isolated. Infrastructure validation and planning operate on local files. Future content loading, parsing, translation preparation, planning, and diffing must also remain offline; only an explicit guarded Content Apply may eventually write messages.
 
-At a high level, the exporter writes the current state to `exports/`. The profile loader reads desired state from `profiles/`. The offline planner resolves logical resources against the snapshot and produces descriptive actions such as `create`, `update`, `reorder`, and `sync-permissions`.
+At a high level, the exporter writes the current state to `exports/`. The profile loader reads desired state from `profiles/`. The offline planner resolves logical resources against the snapshot and produces descriptive actions such as `create`, `move`, `move-and-update`, `update`, `reorder`, and `sync-permissions`.
+
+Channel migration identity is deterministic. The planner first prefers an exact name and compatible type under the desired parent, then a unique exact name and compatible type across the guild, then a unique normalized exact name and compatible type. Normalization is limited to case, whitespace, and Discord-style hyphens; there is no fuzzy or substring matching. A desired-key or stored-ID binding would take priority when the profile schema supports one, but v1 profiles do not store Discord IDs. Multiple compatible candidates produce a blocking ambiguity and never a replacement create.
+
+When a uniquely identified channel has a different parent, the offline plan emits `move` or `move-and-update`, retains the existing Discord ID, and excludes that channel from unmanaged resources. Old categories remain unmanaged cleanup candidates: the planner never deletes them. Channel moves are planning-only in v1; their unsupported status makes the saved plan non-executable and guarded apply rejects it.
 
 See [Infrastructure architecture](docs/architecture.md) for existing data flows and [Content architecture](docs/content-architecture.md) for the new layer, message-registry design, safety model, and roadmap.
 

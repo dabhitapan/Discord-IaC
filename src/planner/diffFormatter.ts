@@ -100,7 +100,10 @@ function printSynchronization(operation: StructuredOperation): void {
 }
 
 function printOperation(operation: StructuredOperation): void {
-  console.log(`\n[${operation.action.toUpperCase()}] ${operation.label}`);
+  const displayAction = operation.ambiguous
+    ? "BLOCKED"
+    : operation.action.toUpperCase();
+  console.log(`\n[${displayAction}] ${operation.label}`);
 
   if (operation.permissionOverwrite) {
     console.log(`  target: ${operation.permissionOverwrite.target.name}`);

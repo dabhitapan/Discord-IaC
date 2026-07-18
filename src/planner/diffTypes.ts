@@ -8,6 +8,8 @@ export type ResourceType =
 
 export type OperationAction =
   | "create"
+  | "move"
+  | "move-and-update"
   | "update"
   | "reorder"
   | "sync-permissions"
@@ -95,6 +97,8 @@ export interface StructuredOperation {
 
 export interface OperationSummary {
   create: number;
+  move: number;
+  "move-and-update": number;
   update: number;
   reorder: number;
   "sync-permissions": number;

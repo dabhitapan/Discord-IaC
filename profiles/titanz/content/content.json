@@ -5,7 +5,7 @@
     {
       "id": "rules",
       "file": "english/rules.md",
-      "targetChannel": null,
+      "targetChannel": "rules",
       "order": 10,
       "enabled": true,
       "pinned": true,
@@ -14,7 +14,7 @@
     {
       "id": "faq",
       "file": "english/faq.md",
-      "targetChannel": null,
+      "targetChannel": "faq",
       "order": 20,
       "enabled": true,
       "pinned": false,
@@ -23,7 +23,7 @@
     {
       "id": "welcome",
       "file": "english/welcome.md",
-      "targetChannel": null,
+      "targetChannel": "welcome",
       "order": 30,
       "enabled": true,
       "pinned": false,
@@ -32,7 +32,7 @@
     {
       "id": "beginner-guide",
       "file": "english/beginner-guide.md",
-      "targetChannel": null,
+      "targetChannel": "beginner-guide",
       "order": 40,
       "enabled": true,
       "pinned": false,
@@ -41,7 +41,7 @@
     {
       "id": "events",
       "file": "english/events.md",
-      "targetChannel": null,
+      "targetChannel": "events",
       "order": 50,
       "enabled": true,
       "pinned": false,

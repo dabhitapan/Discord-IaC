@@ -46,7 +46,17 @@ The exporter is not invoked by validation, auditing, or planning. A snapshot mus
 
 ## Planner and detailed diff
 
-`npm run plan` is the concise review surface. It groups operations by resource and reports stable action totals. `npm run diff` renders the field-level details behind creates, updates, reorders, permission-overwrite changes, and permission synchronization. `npm run diff:json` writes the same operations deterministically to `plans/wao-noobs.plan.json`.
+`npm run plan` is the concise review surface. It groups operations by resource and reports stable action totals. `npm run diff` renders the field-level details behind creates, moves, move-and-updates, updates, reorders, permission-overwrite changes, and permission synchronization. `npm run diff:json` writes the same operations deterministically to `plans/wao-noobs.plan.json`.
+
+## Channel identity and migrations
+
+Channel resolution is profile-local and type-safe. It checks exact name plus compatible type under the desired parent first. If that parent changed or does not yet exist, it searches the snapshot guild for a unique exact name plus compatible type, then for a unique normalized exact match. Normalization trims, lowercases, and treats repeated whitespace and hyphens consistently. It never performs substring or fuzzy matching and never matches incompatible channel types.
+
+A unique guild-wide match preserves the existing channel ID. A different parent produces `move`; a simultaneous desired field change produces `move-and-update`. Parent and desired order are represented as field changes in the deterministic artifact. Matching candidates are not reported as unmanaged. If multiple compatible candidates remain, the planner emits a blocking ambiguity operation and suppresses replacement creation.
+
+The current desired-profile schema has stable logical channel keys but no stored Discord-ID binding. A future identity registry or optional ID binding can be inserted ahead of name matching without changing the fallback rules. For now, ambiguous names require manual resolution.
+
+Moves are descriptive and planning-only. They are deliberately unsupported by the Discord writer, so plan safety marks the artifact non-executable and apply aborts before any write. The safe migration workflow is: refresh the read-only snapshot explicitly, review `plan` and `diff`, resolve all ambiguity, save and review the deterministic artifact, and only add guarded move execution in a separately tested phase. No step deletes old channels or categories.
 
 Resolution and comparison happen once in the pure planner layer. Human-readable and JSON formatters consume the resulting structured operations and never decide independently whether values differ. The model includes current and desired values, stable profile keys, available Discord IDs, target identities, complete overwrite states, and synchronization reasons. It is intended to become the reviewed input contract for a future guarded apply engine, which must not recalculate an unreviewed diff.
 

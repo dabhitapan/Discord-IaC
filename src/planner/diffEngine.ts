@@ -77,7 +77,9 @@ export function createOperation(
       extra.sortKey ??
       `${resourceType}|${identity.parent?.profileKey ?? identity.parent?.discordId ?? ""}|${identity.profileKey ?? identity.discordId ?? identity.name}|${action}`,
     supported: extra.supported ?? defaultSupported,
-    ambiguous: extra.ambiguous ?? detail.toLowerCase().includes("ambiguous"),
+    ambiguous:
+      extra.ambiguous ??
+      (action === "warning" && detail.toLowerCase().includes("ambiguous")),
     ...(extra.permissionChanges ? { permissionChanges: extra.permissionChanges } : {}),
     ...(extra.permissionOverwrite
       ? { permissionOverwrite: extra.permissionOverwrite }
@@ -101,6 +103,10 @@ export function flattenPlan(plan: PlanResult): StructuredOperation[] {
 export function summarizeOperations(operations: StructuredOperation[]): OperationSummary {
   return {
     create: operations.filter((item) => item.action === "create").length,
+    move: operations.filter((item) => item.action === "move").length,
+    "move-and-update": operations.filter(
+      (item) => item.action === "move-and-update",
+    ).length,
     update: operations.filter((item) => item.action === "update").length,
     reorder: operations.filter((item) => item.action === "reorder").length,
     "sync-permissions": operations.filter(

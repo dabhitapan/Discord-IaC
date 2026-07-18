@@ -1,14 +1,9 @@
 [
-  {
-    "key": "text-channels",
-    "name": "Text Channels"
-  },
-  {
-    "key": "voice-channels",
-    "name": "Voice Channels"
-  },
-  {
-    "key": "events",
-    "name": "Events"
-  }
+  { "key": "information", "name": "Information" },
+  { "key": "community", "name": "Community" },
+  { "key": "war-and-order", "name": "War and Order" },
+  { "key": "alliance", "name": "Alliance" },
+  { "key": "leadership", "name": "Leadership" },
+  { "key": "technology", "name": "Technology" },
+  { "key": "voice", "name": "Voice Channels" }
 ]

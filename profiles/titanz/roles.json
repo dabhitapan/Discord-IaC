@@ -58,5 +58,52 @@
       "ViewAuditLog",
       "ViewChannel"
     ]
+  },
+  {
+    "key": "officer",
+    "name": "Officer",
+    "permissions": [
+      "ViewChannel",
+      "SendMessages",
+      "SendMessagesInThreads",
+      "CreatePublicThreads",
+      "CreatePrivateThreads",
+      "ManageThreads",
+      "ManageMessages",
+      "PinMessages",
+      "AddReactions",
+      "EmbedLinks",
+      "AttachFiles",
+      "ReadMessageHistory",
+      "UseExternalEmojis",
+      "UseExternalStickers",
+      "ChangeNickname",
+      "ManageNicknames",
+      "KickMembers",
+      "ModerateMembers",
+      "CreateEvents",
+      "ManageEvents",
+      "Connect",
+      "Speak",
+      "Stream",
+      "MuteMembers",
+      "DeafenMembers",
+      "MoveMembers"
+    ],
+    "deniedPermissions": [
+      "Administrator",
+      "BanMembers",
+      "ManageRoles",
+      "ManageGuild",
+      "ManageChannels",
+      "ManageWebhooks",
+      "MentionEveryone"
+    ]
+  },
+  {
+    "key": "member",
+    "name": "Member",
+    "permissions": [],
+    "deniedPermissions": []
   }
 ]

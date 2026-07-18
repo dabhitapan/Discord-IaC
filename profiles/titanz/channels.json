@@ -1,40 +1,34 @@
 [
-  {
-    "categoryKey": "text-channels",
-    "key": "general-chat",
-    "name": "general-chat",
-    "nsfw": false,
-    "permissionMode": "inherit",
-    "rateLimitPerUser": 0,
-    "topic": null,
-    "type": "GuildText"
-  },
-  {
-    "categoryKey": "text-channels",
-    "key": "technology-tips",
-    "name": "technology-tips",
-    "nsfw": false,
-    "permissionMode": "inherit",
-    "rateLimitPerUser": 0,
-    "topic": null,
-    "type": "GuildText"
-  },
-  {
-    "bitrate": 64000,
-    "categoryKey": "voice-channels",
-    "key": "lobby",
-    "name": "Lobby",
-    "permissionMode": "inherit",
-    "type": "GuildVoice",
-    "userLimit": 0
-  },
-  {
-    "bitrate": 64000,
-    "categoryKey": "voice-channels",
-    "key": "gaming",
-    "name": "Gaming",
-    "permissionMode": "inherit",
-    "type": "GuildVoice",
-    "userLimit": 0
-  }
+  { "key": "welcome", "name": "welcome", "type": "GuildText", "categoryKey": "information", "topic": "Start here: a permanent introduction to the Titanz community." },
+  { "key": "rules", "name": "rules", "type": "GuildText", "categoryKey": "information", "topic": "Community and alliance rules." },
+  { "key": "announcements", "name": "announcements", "type": "GuildNews", "categoryKey": "information", "topic": "Official Titanz announcements and important updates." },
+  { "key": "faq", "name": "faq", "type": "GuildText", "categoryKey": "information", "topic": "Permanent answers to frequently asked questions." },
+  { "key": "beginner-guide", "name": "beginner-guide", "type": "GuildText", "categoryKey": "information", "topic": "A permanent starting guide for new War and Order players." },
+
+  { "key": "general-chat", "name": "general-chat", "type": "GuildText", "categoryKey": "community", "topic": "General community conversation." },
+  { "key": "introductions", "name": "introductions", "type": "GuildText", "categoryKey": "community", "topic": "Introduce yourself to the Titanz community." },
+  { "key": "off-topic", "name": "off-topic", "type": "GuildText", "categoryKey": "community", "topic": "Conversation that is not about War and Order." },
+  { "key": "media-and-memes", "name": "media-and-memes", "type": "GuildText", "categoryKey": "community", "topic": "Screenshots, videos, artwork, and memes." },
+
+  { "key": "game-news", "name": "game-news", "type": "GuildNews", "categoryKey": "war-and-order", "topic": "War and Order news, updates, and notices." },
+  { "key": "beginner-help", "name": "beginner-help", "type": "GuildText", "categoryKey": "war-and-order", "topic": "Questions and practical help for newer players." },
+  { "key": "strategies", "name": "strategies", "type": "GuildForum", "categoryKey": "war-and-order", "topic": "Topic-based strategy guides and discussions." },
+  { "key": "events", "name": "events", "type": "GuildText", "categoryKey": "war-and-order", "topic": "Current event information and reusable event guidance." },
+  { "key": "recruitment", "name": "recruitment", "type": "GuildForum", "categoryKey": "war-and-order", "topic": "Public recruitment posts and applications." },
+
+  { "key": "alliance-chat", "name": "alliance-chat", "type": "GuildText", "categoryKey": "alliance", "permissionMode": "inherit", "topic": "Private coordination for Titanz alliance members." },
+  { "key": "coordinates-and-resources", "name": "coordinates-and-resources", "type": "GuildText", "categoryKey": "alliance", "permissionMode": "inherit", "topic": "Share coordinates, resource needs, and support requests." },
+  { "key": "battle-reports", "name": "battle-reports", "type": "GuildForum", "categoryKey": "alliance", "permissionMode": "inherit", "topic": "Organized battle reports and after-action discussions." },
+
+  { "key": "leadership", "name": "leadership", "type": "GuildText", "categoryKey": "leadership", "permissionMode": "inherit", "topic": "Private leadership discussion and decisions." },
+  { "key": "war-room", "name": "war-room", "type": "GuildText", "categoryKey": "leadership", "permissionMode": "inherit", "topic": "Private war planning and real-time coordination." },
+  { "key": "recruitment-planning", "name": "recruitment-planning", "type": "GuildText", "categoryKey": "leadership", "permissionMode": "inherit", "topic": "Private recruitment review and planning." },
+  { "key": "leadership-voice", "name": "War Room Voice", "type": "GuildVoice", "categoryKey": "leadership", "permissionMode": "inherit", "bitrate": 64000, "userLimit": 0 },
+
+  { "key": "technology-tips", "name": "technology-tips", "type": "GuildText", "categoryKey": "technology", "topic": "Technology guidance, device help, and useful tools." },
+  { "key": "bot-commands", "name": "bot-commands", "type": "GuildText", "categoryKey": "technology", "topic": "Use community bot commands without cluttering chat." },
+  { "key": "server-feedback", "name": "server-feedback", "type": "GuildForum", "categoryKey": "technology", "topic": "Structured feedback and suggestions for the community." },
+
+  { "key": "lobby", "name": "Lobby", "type": "GuildVoice", "categoryKey": "voice", "bitrate": 64000, "userLimit": 0 },
+  { "key": "gaming", "name": "Gaming", "type": "GuildVoice", "categoryKey": "voice", "bitrate": 64000, "userLimit": 0 }
 ]

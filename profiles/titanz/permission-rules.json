@@ -1,1 +1,25 @@
-[]
+[
+  { "key": "alliance-everyone", "scope": { "type": "category", "key": "alliance" }, "target": { "type": "everyone" }, "allow": [], "deny": ["ViewChannel"] },
+  { "key": "alliance-leader", "scope": { "type": "category", "key": "alliance" }, "target": { "type": "role", "roleKey": "leader" }, "allow": ["ViewChannel"], "deny": [] },
+  { "key": "alliance-officer", "scope": { "type": "category", "key": "alliance" }, "target": { "type": "role", "roleKey": "officer" }, "allow": ["ViewChannel"], "deny": [] },
+  { "key": "alliance-member", "scope": { "type": "category", "key": "alliance" }, "target": { "type": "role", "roleKey": "member" }, "allow": ["ViewChannel"], "deny": [] },
+
+  { "key": "leadership-everyone", "scope": { "type": "category", "key": "leadership" }, "target": { "type": "everyone" }, "allow": [], "deny": ["ViewChannel"] },
+  { "key": "leadership-leader", "scope": { "type": "category", "key": "leadership" }, "target": { "type": "role", "roleKey": "leader" }, "allow": ["ViewChannel"], "deny": [] },
+  { "key": "leadership-officer", "scope": { "type": "category", "key": "leadership" }, "target": { "type": "role", "roleKey": "officer" }, "allow": ["ViewChannel"], "deny": [] },
+
+  { "key": "welcome-everyone", "scope": { "type": "channel", "key": "welcome" }, "target": { "type": "everyone" }, "allow": [], "deny": ["SendMessages"] },
+  { "key": "welcome-officer", "scope": { "type": "channel", "key": "welcome" }, "target": { "type": "role", "roleKey": "officer" }, "allow": ["SendMessages"], "deny": [] },
+  { "key": "rules-everyone", "scope": { "type": "channel", "key": "rules" }, "target": { "type": "everyone" }, "allow": [], "deny": ["SendMessages"] },
+  { "key": "rules-officer", "scope": { "type": "channel", "key": "rules" }, "target": { "type": "role", "roleKey": "officer" }, "allow": ["SendMessages"], "deny": [] },
+  { "key": "announcements-everyone", "scope": { "type": "channel", "key": "announcements" }, "target": { "type": "everyone" }, "allow": [], "deny": ["SendMessages"] },
+  { "key": "announcements-officer", "scope": { "type": "channel", "key": "announcements" }, "target": { "type": "role", "roleKey": "officer" }, "allow": ["SendMessages"], "deny": [] },
+  { "key": "faq-everyone", "scope": { "type": "channel", "key": "faq" }, "target": { "type": "everyone" }, "allow": [], "deny": ["SendMessages"] },
+  { "key": "faq-officer", "scope": { "type": "channel", "key": "faq" }, "target": { "type": "role", "roleKey": "officer" }, "allow": ["SendMessages"], "deny": [] },
+  { "key": "beginner-guide-everyone", "scope": { "type": "channel", "key": "beginner-guide" }, "target": { "type": "everyone" }, "allow": [], "deny": ["SendMessages"] },
+  { "key": "beginner-guide-officer", "scope": { "type": "channel", "key": "beginner-guide" }, "target": { "type": "role", "roleKey": "officer" }, "allow": ["SendMessages"], "deny": [] },
+  { "key": "game-news-everyone", "scope": { "type": "channel", "key": "game-news" }, "target": { "type": "everyone" }, "allow": [], "deny": ["SendMessages"] },
+  { "key": "game-news-officer", "scope": { "type": "channel", "key": "game-news" }, "target": { "type": "role", "roleKey": "officer" }, "allow": ["SendMessages"], "deny": [] },
+  { "key": "events-everyone", "scope": { "type": "channel", "key": "events" }, "target": { "type": "everyone" }, "allow": [], "deny": ["SendMessages"] },
+  { "key": "events-officer", "scope": { "type": "channel", "key": "events" }, "target": { "type": "role", "roleKey": "officer" }, "allow": ["SendMessages"], "deny": [] }
+]

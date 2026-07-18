@@ -4,6 +4,8 @@
 
 The artifact contains schema version, profile and guild identity, canonical SHA-256 snapshot/profile hashes, deterministic structured operations, summary, warnings, unsupported-operation count, ambiguity count, unresolved-ID count, and an executable flag. It has no timestamp, secret, absolute path, or formatting-dependent hash input.
 
+Channel migrations use `move` when only placement changes and `move-and-update` when placement and configured channel fields differ. Both retain the matched Discord channel ID and record parent/order changes. They are planning-only and therefore contribute to the unsupported-operation count. Ambiguous identity candidates are sorted deterministically, block execution, and suppress a duplicate `create`.
+
 Structured operations include resource identity, current/desired state, field and permission deltas, dependencies, deterministic sort keys, support/ambiguity metadata, and full overwrite or synchronization details. This is the writer contract.
 
 `npm run drift` contacts Discord read-only and exits 0 when the fresh snapshot hash matches, 1 for drift, and 2 for safety/configuration errors. `npm run verify` is offline and exits 0 when no actionable operations remain, 1 when differences remain, and 2 for validation, ambiguity, identity, or configuration failures.

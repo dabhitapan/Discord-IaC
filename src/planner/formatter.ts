@@ -4,6 +4,8 @@ import type { PlanAction, PlanResult } from "./types.js";
 
 const order: OperationAction[] = [
   "create",
+  "move",
+  "move-and-update",
   "update",
   "reorder",
   "sync-permissions",
@@ -19,7 +21,8 @@ function printSection(title: string, actions: PlanAction[]): void {
     return;
   }
   for (const item of actions) {
-    console.log(`  [${item.action.toUpperCase()}] ${item.label} — ${item.detail}`);
+    const displayAction = item.ambiguous ? "BLOCKED" : item.action.toUpperCase();
+    console.log(`  [${displayAction}] ${item.label} — ${item.detail}`);
   }
 }
 
@@ -30,7 +33,8 @@ function printPermissionGroup(title: string, actions: PlanAction[]): void {
     return;
   }
   for (const item of actions) {
-    console.log(`  [${item.action.toUpperCase()}] ${item.label} — ${item.detail}`);
+    const displayAction = item.ambiguous ? "BLOCKED" : item.action.toUpperCase();
+    console.log(`  [${displayAction}] ${item.label} — ${item.detail}`);
   }
 }
 
